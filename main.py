@@ -7,6 +7,8 @@ from time import sleep
 
 
 BOOK_LINKS = []
+FIRST_PAGE_NUM = 1
+LAST_PAGE_NUM = 400
 
 def buy_book(book_link):
 
@@ -30,20 +32,21 @@ def get_books_links(browser_page):
             if book_item is not None:
                                 
                 try:
+                    
                     book_link = book_item.get_attribute('href')
                     sleep(0.1)
-                    #compra_book(book_link)
-                    #print(book_link)
                     BOOK_LINKS.append(book_link)
-
                     buy_book(book_link)
 
                 except:
+                    print('Ocorreu um erro... Tente resolver você mesmo usando o IPDB, ou finalize o programa.')
                     import ipdb; ipdb.set_trace()
             else:
+                print('Ocorreu um erro... Tente resolver você mesmo usando o IPDB, ou finalize o programa.')
                 import ipdb; ipdb.set_trace()
 
     except AttributeError:
+        print('Ocorreu um erro... Tente resolver você mesmo usando o IPDB, ou finalize o programa.')
         import ipdb; ipdb.set_trace()
 
 
@@ -56,12 +59,9 @@ if __name__ == "__main__":
     chrome_options.add_argument("--headless")
     browser = webdriver.Chrome(options=chrome_options)
     
-    browser.get('https://www.amazon.com.br/s?i=digital-text&bbn=5308307011&rh=n%3A5308307011%2Cp_36%3A5560478011%2Cp_n_feature_browse-bin%3A6406077011%7C6406078011&s=popularity-rank&dc&page=1&language=en_US&_encoding=UTF8&fst=as%3Aoff&linkCode=sl2&linkId=02321018ed113bd4621621a252c9f986&qid=1586219653&rnid=19553430011&ref=sr_pg_2')
-
-    
-    
+    browser.get('https://www.amazon.com.br/s?i=digital-text&bbn=5308307011&rh=n%3A5308307011%2Cp_36%3A5560478011%2Cp_n_feature_browse-bin%3A6406077011%7C6406078011&s=popularity-rank&dc&page={}&language=en_US&_encoding=UTF8&fst=as%3Aoff&linkCode=sl2&linkId=02321018ed113bd4621621a252c9f986&qid=1586219653&rnid=19553430011&ref=sr_pg_2'.format(FIRST_PAGE_NUM))
+        
     #TUTORIAL
-    print("\n\n NA PRIMEIRA EXECUCAO, LOGUE NA SUA CONTA DA AMAZON, MANDE SALVAR NO NAVEGADOR, FECHE O NAVEGADOR E RODE O PROGRAMA NOVAMENTE \n\n\n\n")
 
     if os.path.isfile("cookies.pkl"):
         
@@ -72,12 +72,13 @@ if __name__ == "__main__":
                 browser.add_cookie(cookie)
 
             browser.refresh()
-
             get_books_links(browser)
 
     else:
 
-        input("APOS LOGAR NO SITE, DIGITE QUALQUER TECLA PARA FINALIZAR:")
+        print("\n\n NA PRIMEIRA EXECUCAO, LOGUE NA SUA CONTA DA AMAZON, MANDE ARMAZENAR A SENHA NO NAVEGADOR, E RETORNE AO PROGRAMA PARA FECHA-LO. \n\n\n\n")
+        
+        input("ATENCAO: APOS LOGAR NO SITE, DIGITE QUALQUER TECLA PARA FINALIZAR O PROGRAMA. RODE O PROGRAMA NOVAMENTE:")
 
         pickle.dump(browser.get_cookies(), open('cookies.pkl', 'wb'))
             
@@ -86,23 +87,12 @@ if __name__ == "__main__":
         exit()
 
 
-    for i in range(61, 401):
+    for page_number in range(FIRST_PAGE_NUM + 1, LAST_PAGE_NUM + 1):
 
-        print('--  PÁGINA {}  --\n\n'.format(i))
+        print('--  PÁGINA {}  --\n\n'.format(page_number))
 
-        link = 'https://www.amazon.com.br/s?i=digital-text&bbn=5308307011&rh=n%3A5308307011%2Cp_36%3A5560478011%2Cp_n_feature_browse-bin%3A6406077011%7C6406078011&s=popularity-rank&dc&page={}&language=en_US&_encoding=UTF8&fst=as%3Aoff&linkCode=sl2&linkId=02321018ed113bd4621621a252c9f986&qid=1586219653&rnid=19553430011&ref=sr_pg_2'.format(i)
-        
- 
+        link = 'https://www.amazon.com.br/s?i=digital-text&bbn=5308307011&rh=n%3A5308307011%2Cp_36%3A5560478011%2Cp_n_feature_browse-bin%3A6406077011%7C6406078011&s=popularity-rank&dc&page={}&language=en_US&_encoding=UTF8&fst=as%3Aoff&linkCode=sl2&linkId=02321018ed113bd4621621a252c9f986&qid=1586219653&rnid=19553430011&ref=sr_pg_2'.format(page_number)
+         
         browser.get(link)
 
         get_books_links(browser)
-
-
-
-
-           
-    
-
-            
-        
-    
